@@ -1,5 +1,4 @@
-"""
-1. Analysis using .head(), .info(), .describe(), .value_counts()
+"""1. Analysis using .head(), .info(), .describe(), .value_counts()
 2. Visualization using histograms, scatter plot, confusion matrix and graph
 3. Experimenting with attribute combinations and their effect on above
 4. Preparing for machine learning
@@ -13,11 +12,9 @@
 5. selecting and traning a model - linear regression, randomforest, Decision tree
 6. Better evaluation using Crossvalidation - looking at results of various validations
 7. Refining the model using gridsearchcv / Randomized search cv
-8 Evaluate the system on test set
+8 Evaluate the system on test set"""
 
-
-"""
-
+"""1. Analysis using .head(), .info(), .describe(), .value_counts()"""
 import pandas as pd
 import numpy as np
 
@@ -34,8 +31,7 @@ housing["income_cat"] = pd.cut(housing["median_income"],
 print(housing["income_cat"].value_counts())
 housing["income_cat"].hist()
 
-"""Discover and Visualize the data to gain insights"""
-
+"""2. Visualization using histograms, scatter plot, confusion matrix and graph"""
 import matplotlib.pyplot as plt
 housing.hist(bins = 50, figsize=(20,15))
 plt.savefig("attributes.png", format = "png")
@@ -60,10 +56,9 @@ print(corr_matrix["median_house_value"])
 """from pandas.plotting import scatter_matrix
 attributes = ["median_house_value", "median_income", "total_rooms", "housing_median_age"]
 scatter_matrix(housing[attributes], figsize=(12.8))
-plt.show()
-"""
+plt.show()"""
 
-"""Experimenting with attribute combinations"""
+"""3. Experimenting with attribute combinations and their effect on above"""
 
 housing["rooms_per_household"] = housing["total_rooms"]/housing["households"]
 housing["bedrooms_per_room"] = housing["total_bedrooms"]/housing["total_rooms"]
@@ -78,6 +73,16 @@ plt.axis([0, 5, 0, 520000])
 plt.show()
 print(housing.describe())
 
+
+"""4. Preparing for machine learning
+    1. Splitting traning and testing set, seperating labels and features
+    2. seperating numerical and categorical columns
+    3. Transformationol pipeline - import, initialize, fir, tranform,predict, analyse metrics
+    4. categorical - ordinal encoder and onehotencoder
+    5. Numerical - SimpleImputer, customattributeadder, StandardScalar, MinMaxScalar
+    6. Pipelines, columntranfermer
+    7. Creating a custom transformer"""
+
 """Splitting training and test set"""
 
 from sklearn.model_selection import train_test_split
@@ -89,17 +94,16 @@ print(test_set.head(5))
 housing = train_set.drop("median_house_value", axis=1) # drop labels for training set
 housing_labels = train_set["median_house_value"].copy()
 
-
-"""Preparing the data for machine learning - 
-
-3 transformations on the numerical data - removing null values, adding extra attributes, scaling the values
-1 transformation on categorical data - onehotencoder to convert categorical data into matrix of 0 and 1
-
-Separating the data into numerical and textual values"""
+"""Separating the data into numerical and textual values"""
 
 housing_num = housing.drop("ocean_proximity", axis=1)
 housing_cat = housing[["ocean_proximity"]]
 
+
+"""Preparing the data for machine learning - 
+
+3 transformations on the numerical data - removing null values, adding extra attributes, scaling the values
+1 transformation on categorical data - onehotencoder to convert categorical data into matrix of 0 and 1"""
 
 """Converting categorical data into array
 1. Ordinal Encoder - assigns a number to each value of the categorical value starting from 0
@@ -118,18 +122,13 @@ housing_cat_oneencoded = onehotencoder.fit_transform(housing_cat)
 print(housing_cat_oneencoded)
 print(housing_cat_oneencoded.toarray())
 
-
-
-"""
-1. Cleaning the numerical data - removing null values  There are 3 ways of doing it
+"""1. Cleaning the numerical data - removing null values  There are 3 ways of doing it
 housing.dropna(subset=["total_bedrooms"])    # option 1 - removing the rows
 housing.drop("total_bedrooms", axis=1)       # option 2 - removing the column altogether
 median = housing["total_bedrooms"].median()  # option 3 - replacing the blank value with some other value 
 housing["total_bedrooms"].fillna(median, inplace=True)
 
-The transformer simpleimputer can be used also for it
-
-"""
+The transformer simpleimputer can be used also for it"""
 
 from sklearn.impute import SimpleImputer
 imputer = SimpleImputer(strategy="median")
@@ -182,7 +181,6 @@ housing_extra_attribs = pd.DataFrame(
 print(housing_extra_attribs.head())
 
 """transformation -3 scaling the numberical data
-
 2 classes can be used to do it - MinMaxScalar and StandardScaler()"""
 
 from sklearn.preprocessing import StandardScaler
